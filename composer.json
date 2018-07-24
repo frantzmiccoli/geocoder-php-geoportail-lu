@@ -10,7 +10,7 @@
             "email": "youwillfindmeiamsure@example.com"
         }
     ],
-    "type": "project",
+    "type": "library",
     "require": {
         "php": "^7.0",
         "geocoder-php/common-http": "^4.0",
