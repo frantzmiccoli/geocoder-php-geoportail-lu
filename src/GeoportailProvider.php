@@ -15,7 +15,7 @@ use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
 
 
-class GeocoderProvider extends AbstractHttpProvider implements Provider {
+class GeoportailProvider extends AbstractHttpProvider implements Provider {
 
     const GEOCODE_URL_TEMPLATE =
         'https://apiv3.geoportail.lu/geocode/search?queryString=%s';
@@ -24,7 +24,7 @@ class GeocoderProvider extends AbstractHttpProvider implements Provider {
         'https://api.geoportail.lu/geocoder/reverseGeocode?lon=%s&lat=%s';
 
     /**
-     * @param HttpClient $client an HTTP adapter
+     * @param HttpClient $client
      */
     public function __construct(HttpClient $client)
     {
