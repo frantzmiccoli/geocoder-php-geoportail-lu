@@ -5,10 +5,10 @@ use PHPUnit\Framework\TestCase;
 use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
 use Geocoder\Geocoder;
-use FrantzMiccoli\GeoportailLu\GeocoderProvider;
+use FrantzMiccoli\GeoportailLu\GeoportailProvider;
 
 
-class GeocoderProviderTest extends TestCase
+class GeoportailProviderTest extends TestCase
 {
 	
     public function testGeocoding()
@@ -60,7 +60,7 @@ class GeocoderProviderTest extends TestCase
     private function getGeocoder()
     {
         $httpClient = new \Http\Client\Curl\Client();
-        $provider = new GeocoderProvider($httpClient);
+        $provider = new GeoportailProvider($httpClient);
         $geocoder = new \Geocoder\StatefulGeocoder($provider, 'en');
         return $geocoder;
     }
