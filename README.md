@@ -5,6 +5,17 @@ This project is a provider for
 enable the consumption of the geoportail.lu API detailed in the
 [Geoportail documentation](https://wiki.geoportail.lu/doku.php?id=en:api:rest).
  
+
+Install
+--- 
+
+```sh
+composer require frantzmicccoli/geocoder-php-geoportail-lu
+```
+
+Extra information
+---
+
 The API always returns an address, I recommend that you double check as 
 [some values give strange results](http://apiv3.geoportail.lu/geocode/search?queryString=rue%20de%20bonnevoie).
 
