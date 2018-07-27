@@ -34,6 +34,21 @@ class GeoportailProviderTest extends TestCase
         $this->assertGreaterThan(6.13, $longitude);
     }
 
+    public function testFailingGeocoding() {
+        $geocoder = $this->getGeocoder();
+
+        $addressText = '8';
+        $query = GeocodeQuery::create($addressText);
+        $addresses = $geocoder->geocodeQuery($query);
+        $this->assertEquals(0, $addresses->count());
+
+
+        $addressText = 'r';
+        $query = GeocodeQuery::create($addressText);
+        $addresses = $geocoder->geocodeQuery($query);
+        $this->assertEquals(0, $addresses->count());
+    }
+
     public function testReverseGeocoding()
     {
         $geocoder = $this->getGeocoder();
