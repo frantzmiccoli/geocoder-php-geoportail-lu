@@ -45,6 +45,14 @@ class GeoportailProvider extends AbstractHttpProvider implements Provider {
         $addresses = [];
 
         foreach ($results as $result) {
+            // the ratio is supposed to measure the quality of the match
+            // yet we observe unreasonable 1s like
+            // http://apiv3.geoportail.lu/geocode/search?queryString=gra%20r%20diirch
+            // 0 is shit for sure
+            if ($result['ratio'] <= 0.5) {
+                continue;
+            }
+
             # from what we have observed only one address is returned
             $addresses[] = $this->getAddressFromResultArray($result);
         }
