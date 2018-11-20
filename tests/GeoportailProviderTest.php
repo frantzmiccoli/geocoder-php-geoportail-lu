@@ -1,17 +1,23 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use Geocoder\IntegrationTest\BaseTestCase;
 
 use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
+
 use Geocoder\Geocoder;
 use FrantzMiccoli\GeoportailLu\GeoportailProvider;
 
 
-class GeoportailProviderTest extends TestCase
+class GeoportailProviderTest extends BaseTestCase
 {
+
+    protected function getCacheDir()
+    {
+        return __DIR__.'/.cached_responses';
+    }
 	
-    public function testGeocoding()
+    public function testGeocodeQuery()
     {
         $geocoder = $this->getGeocoder();
 
@@ -34,7 +40,7 @@ class GeoportailProviderTest extends TestCase
         $this->assertGreaterThan(6.13, $longitude);
     }
 
-    public function testFailingGeocoding() {
+    public function testFailingGeocodeQuery() {
         $geocoder = $this->getGeocoder();
 
         $addressText = '8';
@@ -49,7 +55,7 @@ class GeoportailProviderTest extends TestCase
         $this->assertEquals(0, $addresses->count());
     }
 
-    public function testReverseGeocoding()
+    public function testReverseQuery()
     {
         $geocoder = $this->getGeocoder();
 
