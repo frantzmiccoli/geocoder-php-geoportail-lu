@@ -1,90 +1,54 @@
 <?php
 
-use Geocoder\IntegrationTest\BaseTestCase;
+declare(strict_types=1);
 
+use FrantzMiccoli\GeoportailLu\GeoportailProvider;
+use Geocoder\IntegrationTest\BaseTestCase;
 use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
 
-use Geocoder\Geocoder;
-use FrantzMiccoli\GeoportailLu\GeoportailProvider;
-
-
 class GeoportailProviderTest extends BaseTestCase
 {
-
     protected function getCacheDir()
     {
         return __DIR__.'/.cached_responses';
     }
-	
+
     public function testGeocodeQuery()
     {
-        $geocoder = $this->getGeocoder();
+        $provider = new GeoportailProvider($this->getHttpClient());
+        $results = $provider->geocodeQuery(GeocodeQuery::create('81 rue de bonnevoie, L-1260 Luxembourg'));
 
-        $addressText = '81 rue de bonnevoie, L-1260 Luxembourg';
-        $query = GeocodeQuery::create($addressText);
-        $addresses = $geocoder->geocodeQuery($query);
+        $this->assertInstanceOf('\Geocoder\Model\AddressCollection', $results);
+        $this->assertCount(1, $results);
 
-        $oneAddress = null;
-        foreach($addresses as $address) {
-            $oneAddress = $address;
-        }
-
-        $coordinates = $oneAddress->getCoordinates();
-        $latitude = $coordinates->getLatitude();
-        $longitude = $coordinates->getLongitude();
-
-        $this->assertLessThan(49.7, $latitude);
-        $this->assertGreaterThan(49.5, $latitude);
-        $this->assertLessThan(6.14, $longitude);
-        $this->assertGreaterThan(6.13, $longitude);
-    }
-
-    public function testFailingGeocodeQuery() {
-        $geocoder = $this->getGeocoder();
-
-        $addressText = '8';
-        $query = GeocodeQuery::create($addressText);
-        $addresses = $geocoder->geocodeQuery($query);
-        $this->assertEquals(0, $addresses->count());
-
-
-        $addressText = 'r';
-        $query = GeocodeQuery::create($addressText);
-        $addresses = $geocoder->geocodeQuery($query);
-        $this->assertEquals(0, $addresses->count());
+        /** @var \Geocoder\Model\Address $result */
+        $result = $results->first();
+        $this->assertInstanceOf('\Geocoder\Model\Address', $result);
+        $this->assertEquals(49.599913, $result->getCoordinates()->getLatitude(), '', 0.00001);
+        $this->assertEquals(6.137322, $result->getCoordinates()->getLongitude(), '', 0.00001);
+        $this->assertEquals('81', $result->getStreetNumber());
+        $this->assertEquals('Rue de Bonnevoie', $result->getStreetName());
+        $this->assertEquals('1260', $result->getPostalCode());
+        $this->assertEquals('Luxembourg', $result->getLocality());
     }
 
     public function testReverseQuery()
     {
-        $geocoder = $this->getGeocoder();
+        $provider = new GeoportailProvider($this->getHttpClient());
+        $results = $provider->reverseQuery(ReverseQuery::fromCoordinates(49.599913792216, 6.1373225376094));
 
-        $latitude = 49.599913792216;
-        $longitude = 6.1373225376094;
+        $this->assertInstanceOf('\Geocoder\Model\AddressCollection', $results);
+        $this->assertCount(1, $results);
 
-        $query = ReverseQuery::fromCoordinates($latitude, $longitude);
-        $addresses = $geocoder->reverseQuery($query);
-
-        $oneAddress = null;
-        foreach($addresses as $address) {
-            $oneAddress = $address;
-        }
-
-        $streetName = $address->getStreetName();
-        $pos = strpos($streetName, 'onnevoie');
-        $this->assertNotEquals(-1, $pos);
+        /** @var \Geocoder\Location $result */
+        $result = $results->first();
+        $this->assertInstanceOf('\Geocoder\Model\Address', $result);
+        $this->assertEquals(49.599913, $result->getCoordinates()->getLatitude(), '', 0.00001);
+        $this->assertEquals(6.137322, $result->getCoordinates()->getLongitude(), '', 0.00001);
+        $this->assertEquals('81', $result->getStreetNumber());
+        $this->assertEquals('Rue de Bonnevoie', $result->getStreetName());
+        $this->assertEquals('1260', $result->getPostalCode());
+        $this->assertEquals('Luxembourg', $result->getLocality());
     }
-
-    /**
-     * @return Geocoder
-     */
-    private function getGeocoder()
-    {
-        $httpClient = new \Http\Client\Curl\Client();
-        $provider = new GeoportailProvider($httpClient);
-        $geocoder = new \Geocoder\StatefulGeocoder($provider, 'en');
-        return $geocoder;
-    }
-  
-
 }
