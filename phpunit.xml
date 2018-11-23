@@ -7,7 +7,7 @@
          bootstrap="vendor/autoload.php"
 >
     <php>
-        <server name="USE_CACHED_RESPONSES" value="true" />
+        <server name="USE_CACHED_RESPONSES" value="false" />
     </php>
 
     <testsuites>
