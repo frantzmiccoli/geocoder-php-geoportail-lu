@@ -21,7 +21,7 @@ class GeoportailProvider extends AbstractHttpProvider implements Provider {
         'https://apiv3.geoportail.lu/geocode/search?queryString=%s';
 
     const REVERSE_GEOCODE_URL_TEMPLATE =
-        'https://api.geoportail.lu/geocoder/reverseGeocode?lon=%s&lat=%s';
+        'https://apiv3.geoportail.lu/geocode/reverse?lon=%s&lat=%s';
 
     /**
      * @param HttpClient $client
