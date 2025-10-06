@@ -21,7 +21,7 @@ class GeoportailProvider extends AbstractHttpProvider implements Provider {
         'https://apiv4.geoportail.lu/geocode/search?queryString=%s';
 
     const REVERSE_GEOCODE_URL_TEMPLATE =
-        'https://api.geoportail.lu/geocoder/reverseGeocode?lon=%s&lat=%s';
+        'https://apiv4.geoportail.lu/geocode/reverse?lon=%s&lat=%s';
 
     /**
      * @param HttpClient $client
@@ -47,7 +47,7 @@ class GeoportailProvider extends AbstractHttpProvider implements Provider {
         foreach ($results as $result) {
             // the ratio is supposed to measure the quality of the match
             // yet we observe unreasonable 1s like
-            // http://apiv3.geoportail.lu/geocode/search?queryString=gra%20r%20diirch
+            // http://apiv4.geoportail.lu/geocode/search?queryString=gra%20r%20diirch
             // 0 is shit for sure
             if ($result['ratio'] <= 0.5) {
                 continue;
@@ -112,28 +112,17 @@ class GeoportailProvider extends AbstractHttpProvider implements Provider {
      * @return Address
      */
     private function getAddressFromResultArray($resultArray): Address {
-        $addressDetails = $resultArray['AddressDetails'] ?? [];
+        $addressDetails = $resultArray;
         $builder = new AddressBuilder($this->getName());
 
-        if (array_key_exists('street', $addressDetails)) {
-            $streetName = $addressDetails['street'];
-            $builder->setStreetName($streetName);
-        }
-
-        if (array_key_exists('postnumber', $addressDetails)) {
-            $streetNumber = $addressDetails['postnumber'];
-            $builder->setStreetNumber($streetNumber);
-        }
-
-        if (array_key_exists('locality', $addressDetails)) {
-            $locality = $addressDetails['locality'];
-            $builder->setLocality($locality);
-        }
-
-        if (array_key_exists('zip', $addressDetails)) {
-            $postalCode = $addressDetails['zip'];
-            $builder->setPostalCode($postalCode);
-        }
+        $builder->setStreetName($addressDetails['street'] ?? null);
+        $builder->setStreetNumber($addressDetails['number'] ?? null);
+        $builder->setSubLocality($addressDetails['locality'] ?? null);
+        $builder->setLocality(
+            $addressDetails['commune'] ?? $addressDetails['locality'] ?? null);
+        $builder->setPostalCode($addressDetails['postal_code'] ?? null);
+        $builder->setCountry($addressDetails['country'] ?? null);
+        $builder->setCountryCode($addressDetails['country_code'] ?? null);
 
         $geomLongLat = $resultArray['geomlonlat'] ?? [];
         $geomLongLatType = $geomLongLat['type'] ?? '';

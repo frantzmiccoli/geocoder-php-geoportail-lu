@@ -25,10 +25,8 @@ class GeoportailProviderTest extends BaseTestCase
         $query = GeocodeQuery::create($addressText);
         $addresses = $geocoder->geocodeQuery($query);
 
-        $oneAddress = null;
-        foreach($addresses as $address) {
-            $oneAddress = $address;
-        }
+        $addressesAsArray = $addresses->all();
+        $oneAddress = array_pop($addressesAsArray);
 
         $coordinates = $oneAddress->getCoordinates();
         $latitude = $coordinates->getLatitude();
@@ -65,12 +63,10 @@ class GeoportailProviderTest extends BaseTestCase
         $query = ReverseQuery::fromCoordinates($latitude, $longitude);
         $addresses = $geocoder->reverseQuery($query);
 
-        $oneAddress = null;
-        foreach($addresses as $address) {
-            $oneAddress = $address;
-        }
+        $addressesAsArray = $addresses->all();
+        $oneAddress = array_pop($addressesAsArray);
 
-        $streetName = $address->getStreetName();
+        $streetName = $oneAddress->getStreetName() ?? '';
         $pos = strpos($streetName, 'onnevoie');
         $this->assertNotEquals(-1, $pos);
     }
