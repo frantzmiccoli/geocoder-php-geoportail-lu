@@ -16,8 +16,7 @@ composer require frantzmicccoli/geocoder-php-geoportail-lu
 Extra information
 ---
 
-The API always returns an address, I recommend that you double check as 
+The API always returns an address, I recommend that you doublecheck as 
 [some values give strange results](http://apiv3.geoportail.lu/geocode/search?queryString=rue%20de%20bonnevoie).
 
-We use this provider at [Nexvia](https://www.nexvia.lu) and everything run
-smooth so far.
+We use this provider at [Nexvia](https://www.nexvia.lu) and everything runs smooth so far.

@@ -18,7 +18,7 @@ use Geocoder\Query\ReverseQuery;
 class GeoportailProvider extends AbstractHttpProvider implements Provider {
 
     const GEOCODE_URL_TEMPLATE =
-        'https://apiv3.geoportail.lu/geocode/search?queryString=%s';
+        'https://apiv4.geoportail.lu/geocode/search?queryString=%s';
 
     const REVERSE_GEOCODE_URL_TEMPLATE =
         'https://api.geoportail.lu/geocoder/reverseGeocode?lon=%s&lat=%s';
